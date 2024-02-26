@@ -3,11 +3,9 @@ package com.dailycodefuffer.employee.services;
 import com.dailycodefuffer.employee.entity.EmployeeEntity;
 import com.dailycodefuffer.employee.model.Employee;
 import com.dailycodefuffer.employee.repository.EmployeeRepository;
-import org.hibernate.annotations.Collate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.text.Collator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,5 +48,24 @@ public class EmployeeServiceImpl implements EmployeeService{
         EmployeeEntity employee = employeeRepository.findById(id).get();
         employeeRepository.delete(employee);
         return true;
+    }
+
+    @Override
+    public Employee getEmployeeById(Long id) {
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeEntity,employee);
+        return employee;
+    }
+
+    @Override
+    public Employee updateEmployee(Long id, Employee employee) {
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+        employeeEntity.setEmailId(employee.getEmailId());
+        employeeEntity.setFirstName(employee.getFirstName());
+        employeeEntity.setLastName(employee.getLastName());
+
+        employeeRepository.save(employeeEntity);
+        return employee;
     }
 }
